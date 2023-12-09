@@ -67,7 +67,7 @@ void Main()
 	}
 
 	double T = 1;//秒
-	double lambda = 130;//配列の数
+	double lambda = 300;//配列の数
 	double beforeTime = Scene::Time();
 	while (System::Update())
 	{
@@ -82,13 +82,14 @@ void Main()
 			//グラフを移動させる
 			const int step = lambda / T * deltaT;
 			for (int i = 0; i < step; i++) {
-				toRight[0] = Math::Sin(Math::Pi * 2 / T * (beforeTime+(deltaT/step*i)));
 				tempToRight = shiftValues(toRight, 1);
 				tempToLeft = shiftValues(toLeft, -1);
 
 				tempToRight = addArray(tempToRight, reflectValues(toLeft, -1, false));
 				toLeft = addArray(tempToLeft, reflectValues(toRight, 1, true));
 				toRight = tempToRight;
+
+				toRight[0] += Math::Sin(Math::Pi * 2 / T * (beforeTime + (deltaT / step * i)));//波を足す(外からの音源)
 			}
 			beforeTime = Scene::Time();
 
@@ -97,6 +98,6 @@ void Main()
 		//和を描画
 		const Array<double> sum = addArray(toRight, toLeft);
 		//max,min
-		DrawLineGraph(graphArea, sum, 2, -2, HSV{ 160, 1.0, 0.9 }, 4);
+		DrawLineGraph(graphArea, sum, 8, -8, HSV{ 160, 1.0, 0.9 }, 4);
 	}
 }
